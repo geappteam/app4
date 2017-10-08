@@ -84,26 +84,26 @@ title('Main considered amplitudes after FFT and Hamming window on A Sharp signal
 xlabel('Frequency (Hz)')
 
 % Isolating main sinus algorithm
-[main_peaks, main_peaks_freq] = findpeaks(dB_ampl_FT_hw_guitarAS(spectral_freq_data_mid_index:N-1),f(spectral_freq_data_mid_index:N-1),'MinPeakDistance',freq_separation_harmonics_tweak);
+[main_peaks, main_peaks_freq] = findpeaks(dB_ampl_FT_hw_guitarAS(spectral_freq_data_mid_index:N-1), f((spectral_freq_data_mid_index:N-1)+x_axis_spectral_freq_data_alignment),'MinPeakDistance',freq_separation_harmonics_tweak);
 main_peaks_freq = main_peaks_freq';
-main_peaks_informations = [main_peaks (round((main_peaks_freq*N)/fe)+x_axis_spectral_freq_data_alignment)];
+%main_peaks_informations = [main_peaks (round((main_peaks_freq*N)/fe)+x_axis_spectral_freq_data_alignment)];
+main_peaks_informations = [main_peaks main_peaks_freq];
 main_peaks_informations = sortrows(main_peaks_informations,-1);
 main_peaks_informations = main_peaks_informations(1:nb_main_sinus_needed,:);
 
 % Inserting other parameters, in one array, associated to the main sinus peaks
 for main_sinus = 1:nb_main_sinus_needed
     main_sinus_parameters(main_sinus, amplitudes) = main_peaks_informations(main_sinus,1);
-    main_sinus_parameters(main_sinus, frequencies) = f(main_peaks_informations(main_sinus,2));
-    main_sinus_parameters(main_sinus, phases) = phase_FT_hw_guitarAS(main_peaks_informations(main_sinus,2));
+    main_sinus_parameters(main_sinus, frequencies) = main_peaks_informations(main_sinus,2);
+    main_sinus_parameters(main_sinus, phases) = phase_FT_hw_guitarAS(round(main_peaks_informations(main_sinus,2)*N/fe));
 end
 
-% figure(3)
-% subplot(2,1,1)
-% stem(main_sinus_parameters(:,frequencies),main_sinus_parameters(:,amplitudes));
-% title('Amplitude after FFT and Hamming window on A Sharp signal')
-% xlabel('Frequency (Hz)')
-% ylabel('Amplitude (dB)')
-% subplot(2,1,2)
-% stem(main_sinus_parameters(:,frequencies),main_sinus_parameters(:,phases));
-% xlabel('Frequency (Hz)')
-% ylabel('Phase (rads/s)')
+figure(3)
+subplot(2,1,1)
+stem(main_sinus_parameters(:,frequencies),main_sinus_parameters(:,amplitudes));
+xlabel('Frequency (Hz)')
+ylabel('Amplitude (dB)')
+subplot(2,1,2)
+stem(main_sinus_parameters(:,frequencies),main_sinus_parameters(:,phases));
+xlabel('Frequency (Hz)')
+ylabel('Phase (rads/s)')

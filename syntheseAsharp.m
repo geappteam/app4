@@ -2,6 +2,11 @@ clc
 close all
 clear all
 
+% To change for tweaking
+freq_separation_harmonics_tweak = 450;
+almost_next_harmonic_multiplier = 1.8;
+nb_main_sinus_needed = 32;
+portion_maximum_spectral_ray_threshold = 0.10;
 
 % Load guitar A sharp
 [guitarAS, guitarAS_Fs] = audioread('res/note_guitare_LAd.wav');
@@ -9,17 +14,13 @@ clear all
 % Constants
 N = size(guitarAS,1);
 fe = guitarAS_Fs;
-portion_maximum_spectral_ray_threshold = 0.10;
+
 x_axis_spectral_freq_data_alignment = -N/2;
 spectral_freq_data_mid_index = N/2;
-nb_main_sinus_needed = 32;
 
 amplitudes = 1;
 frequencies = 2;
 phases = 3;
-
-almost_next_harmonic_multiplier = 1.8;
-
 
 % Analog frequency
 f = @(k) (k / N) * fe;
@@ -59,6 +60,7 @@ maximum_spectral_ray = 0;
 for index = 1:N
     if maximum_spectral_ray < dB_ampl_FT_hw_guitarAS(index)
         maximum_spectral_ray = dB_ampl_FT_hw_guitarAS(index);
+        maximum_spectral_ray_index = index;
     end
 end
 
@@ -81,22 +83,27 @@ xlim([0 highest_considered_freq])
 title('Main considered amplitudes after FFT and Hamming window on A Sharp signal')
 xlabel('Frequency (Hz)')
 
-% Choosing main sinus algorithm
-main_sinus_parameters = zeros(nb_main_sinus_needed,3);
-for n_main_sinus = 1:nb_main_sinus_needed
-    last_main_sinus = 0;
-    last_main_sinus_index = 1;
-    for index = spectral_freq_data_mid_index:N
-        if  cleaned_dB_ampl_FT_hw_guitarAS(index) > last_main_sinus
-            actual_frequency = f((index)+x_axis_spectral_freq_data_alignment);
-            if (n_main_sinus == 1) || ((main_sinus_parameters((n_main_sinus-1), frequencies)*almost_next_harmonic_multiplier) < actual_frequency) || ((main_sinus_parameters((n_main_sinus-1), amplitudes)) < cleaned_dB_ampl_FT_hw_guitarAS(index)) 
-                last_main_sinus_index = index;
-                last_main_sinus = cleaned_dB_ampl_FT_hw_guitarAS(index);
-            end
-        end
-    end
-    
-    main_sinus_parameters(n_main_sinus,amplitudes) = last_main_sinus;
-    main_sinus_parameters(n_main_sinus,frequencies) = f((last_main_sinus_index)+x_axis_spectral_freq_data_alignment);
-    main_sinus_parameters(n_main_sinus,phases) = phase_FT_hw_guitarAS(last_main_sinus_index);
+% Isolating main sinus algorithm
+[main_peaks, main_peaks_freq] = findpeaks(dB_ampl_FT_hw_guitarAS(spectral_freq_data_mid_index:N-1),f(spectral_freq_data_mid_index:N-1),'MinPeakDistance',freq_separation_harmonics_tweak);
+main_peaks_freq = main_peaks_freq';
+main_peaks_informations = [main_peaks (round((main_peaks_freq*N)/fe)+x_axis_spectral_freq_data_alignment)];
+main_peaks_informations = sortrows(main_peaks_informations,-1);
+main_peaks_informations = main_peaks_informations(1:nb_main_sinus_needed,:);
+
+% Inserting other parameters, in one array, associated to the main sinus peaks
+for main_sinus = 1:nb_main_sinus_needed
+    main_sinus_parameters(main_sinus, amplitudes) = main_peaks_informations(main_sinus,1);
+    main_sinus_parameters(main_sinus, frequencies) = f(main_peaks_informations(main_sinus,2));
+    main_sinus_parameters(main_sinus, phases) = phase_FT_hw_guitarAS(main_peaks_informations(main_sinus,2));
 end
+
+% figure(3)
+% subplot(2,1,1)
+% stem(main_sinus_parameters(:,frequencies),main_sinus_parameters(:,amplitudes));
+% title('Amplitude after FFT and Hamming window on A Sharp signal')
+% xlabel('Frequency (Hz)')
+% ylabel('Amplitude (dB)')
+% subplot(2,1,2)
+% stem(main_sinus_parameters(:,frequencies),main_sinus_parameters(:,phases));
+% xlabel('Frequency (Hz)')
+% ylabel('Phase (rads/s)')

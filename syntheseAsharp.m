@@ -107,3 +107,7 @@ subplot(2,1,2)
 stem(main_sinus_parameters(:,frequencies),main_sinus_parameters(:,phases));
 xlabel('Frequency (Hz)')
 ylabel('Phase (rads/s)')
+
+
+figure()
+plot((0:N-1) / fe, preriodicSignComposition(main_sinus_parameters, N, fe));

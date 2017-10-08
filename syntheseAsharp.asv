@@ -10,16 +10,8 @@ clear all
 N = size(guitarAS,1);
 fe = guitarAS_Fs;
 portion_maximum_spectral_ray_threshold = 0.10;
-x_axis_spectral_freq_data_alignment = -N/2;
-spectral_freq_data_mid_index = N/2;
+x_axis_spectral_freq_data_alignment = -80000;
 nb_main_sinus_needed = 32;
-
-amplitudes = 1;
-frequencies = 2;
-phases = 3;
-
-almost_next_harmonic_multiplier = 1.8;
-
 
 % Analog frequency
 f = @(k) (k / N) * fe;
@@ -38,8 +30,7 @@ phase_FT_hw_guitarAS = angle(FT_hw_guitarAS);
 % Converting amplitude to dB amplitude
 dB_ampl_FT_hw_guitarAS = 20*log(ampl_FT_hw_guitarAS);
 
-% To align the X-asis for showing only the valuable information
-highest_considered_freq = f((N-1)+x_axis_spectral_freq_data_alignment);
+highest_considered_freq = f((N-1)-80000);
 
 figure(1)
 subplot(2,1,1)
@@ -82,21 +73,15 @@ title('Main considered amplitudes after FFT and Hamming window on A Sharp signal
 xlabel('Frequency (Hz)')
 
 % Choosing main sinus algorithm
-main_sinus_parameters = zeros(nb_main_sinus_needed,3);
+main_sinus_parameters = zeros(32,3);
 for n_main_sinus = 1:nb_main_sinus_needed
     last_main_sinus = 0;
-    last_main_sinus_index = 1;
-    for index = spectral_freq_data_mid_index:N
+    last_main_sinus_index = 0;
+    for index = 1:N
+        last_main_sinus_index = last_main_sinus_index + 1;
         if  cleaned_dB_ampl_FT_hw_guitarAS(index) > last_main_sinus
-            actual_frequency = f((index)+x_axis_spectral_freq_data_alignment);
-            if (n_main_sinus == 1) || ((main_sinus_parameters((n_main_sinus-1), frequencies)*almost_next_harmonic_multiplier) < actual_frequency) || ((main_sinus_parameters((n_main_sinus-1), amplitudes)) < cleaned_dB_ampl_FT_hw_guitarAS(index)) 
-                last_main_sinus_index = index;
-                last_main_sinus = cleaned_dB_ampl_FT_hw_guitarAS(index);
-            end
+            last_main_sinus = cleaned_dB_ampl_FT_hw_guitarAS(index);
         end
     end
-    
-    main_sinus_parameters(n_main_sinus,amplitudes) = last_main_sinus;
-    main_sinus_parameters(n_main_sinus,frequencies) = f((last_main_sinus_index)+x_axis_spectral_freq_data_alignment);
-    main_sinus_parameters(n_main_sinus,phases) = phase_FT_hw_guitarAS(last_main_sinus_index);
+    main_sinus_parameters(n_main_sinus,) = 
 end

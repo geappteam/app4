@@ -1,7 +1,8 @@
-function [ env ] = enveloppe( samples, samplingFrequency, fcutoff)
+% fNcutoff is the normalized cutoff
+function [ env ] = enveloppe( samples, fNcutoff)
     samples = abs(samples);
     
-    fc = fcutoff*2*pi;                              % Cut-off standardized frequency 
+    fc = fNcutoff;                              % Cut-off standardized frequency 
     N = 290;                                        % Estimated at 290 -> To be determined
     n = -((N-1)/2):((N-1)/2);       
     n = n+(n==0)*eps;                               % Only to prevent devision by 0

@@ -3,6 +3,11 @@ clear all
 close all
 
 [y,Fs] = audioread('res/note_guitare_LAd.wav');
-out = enveloppe(y, Fs, 0.0005);
+out = enveloppe(y, pi/1000);
 
-plot (1:size(y), abs(y), 1:size(out),out*2);
+tfreq = 69;
+tt = 0:size(y)-1;
+tsin = sin(tt * 2 * pi * tfreq / Fs);
+
+
+plot (tt, abs(y), tt,out);

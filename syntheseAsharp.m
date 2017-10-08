@@ -88,8 +88,8 @@ xlabel('Frequency (Hz)')
 main_peaks_freq = main_peaks_freq';
 %main_peaks_informations = [main_peaks (round((main_peaks_freq*N)/fe)+x_axis_spectral_freq_data_alignment)];
 main_peaks_informations = [main_peaks main_peaks_freq];
-main_peaks_informations = sortrows(main_peaks_informations,-1);
-main_peaks_informations = main_peaks_informations(1:nb_main_sinus_needed,:);
+main_peaks_informations = sortrows(main_peaks_informations,2);
+main_peaks_informations = main_peaks_informations(2:nb_main_sinus_needed+1,:);
 
 % Inserting other parameters, in one array, associated to the main sinus peaks
 for main_sinus = 1:nb_main_sinus_needed

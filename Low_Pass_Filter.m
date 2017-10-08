@@ -1,19 +1,19 @@
 
 % Problematique
-[y,Fs] = audioread('C:\Users\Utilisateur\OneDrive - USherbrooke\S5\App4\Sons\note_guitare_LAd.wav');
+[y,Fs] = audioread('res/note_guitare_LAd.wav');
 
 % ***
 % Cut-off frequency to be determined
 % ***
 
-% Low Pass Filter : Fc = 8000 Hz, Fs = 44100 hz, fs = 44100 Hz, N = 2000(|M| = ?) Hamming Window
+% Low Pass Filter : Fc = 8000 H, fs = 44100 Hz, N = 2000(|M| = ?) Hamming Window
 
 clc;
 close all;
 clear all;
 
 fc = pi/1000;                         % Cut-off standardized frequency 
-N = 290;                                          % Estimated at 2000 -> To be determined
+N = 290;                                        % Estimated at 2000 -> To be determined
 n = -((N-1)/2):((N-1)/2);       
 n = n+(n==0)*eps;                               % Only to prevent devision by 0
 

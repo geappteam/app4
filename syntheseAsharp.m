@@ -22,6 +22,9 @@ amplitudes = 1;
 frequencies = 2;
 phases = 3;
 
+normalized_freq_des = pi/1000;
+decimating_factor = 1000;
+
 % Analog frequency
 f = @(k) (k / N) * fe;
 
@@ -30,14 +33,14 @@ hammingWindow = hamming(N);
 hw_guitarAS = guitarAS.*hammingWindow;
 
 % Fourrier Transform on hamming-windowed signal
-FT_hw_guitarAS = fft (hw_guitarAS);
+FT_hw_guitarAS = fft(hw_guitarAS);
 FT_hw_guitarAS = fftshift(FT_hw_guitarAS);
 
-ampl_FT_hw_guitarAS = abs(FT_hw_guitarAS);
+ampl_FT_hw_guitarAS = abs(FT_hw_guitarAS); 
 phase_FT_hw_guitarAS = angle(FT_hw_guitarAS);
 
 % Converting amplitude to dB amplitude
-dB_ampl_FT_hw_guitarAS = 20*log(ampl_FT_hw_guitarAS);
+dB_ampl_FT_hw_guitarAS = 20*log10(ampl_FT_hw_guitarAS);
 
 % To align the X-asis for showing only the valuable information
 highest_considered_freq = f((N-1)+x_axis_spectral_freq_data_alignment);
@@ -109,5 +112,25 @@ xlabel('Frequency (Hz)')
 ylabel('Phase (rads/s)')
 
 
-figure()
-plot((0:N-1) / fe, preriodicSignComposition(main_sinus_parameters, N, fe));
+%% Recreating signal
+main_sinus_sum = preriodicSignComposition(main_sinus_parameters, N, fe);
+decimated_env = decimate(enveloppe( guitarAS, normalized_freq_des),decimating_factor); 
+
+n_dec_env_samples = N/decimating_factor;
+synth_signal = zeros(size(N));
+
+for index_dec_env = 1:n_dec_env_samples
+    begin_index = index_dec_env * decimating_factor - (decimating_factor - 1);
+    ending_index = index_dec_env * decimating_factor;
+    for index = begin_index:ending_index
+        synth_signal(index) = main_sinus_sum(index).*decimated_env(index_dec_env);
+    end
+end
+
+synth_signal = synth_signal';
+
+figure(4)
+plot(1:N, guitarAS);
+
+figure(5)
+plot(1:N, synth_signal);

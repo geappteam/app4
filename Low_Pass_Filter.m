@@ -12,7 +12,7 @@ clc;
 close all;
 clear all;
 
-fc = pi/1000;                         % Cut-off standardized frequency 
+fc = pi/1000;                                   % Cut-off standardized frequency 
 N = 290;                                        % Estimated at 2000 -> To be determined
 n = -((N-1)/2):((N-1)/2);       
 n = n+(n==0)*eps;                               % Only to prevent devision by 0

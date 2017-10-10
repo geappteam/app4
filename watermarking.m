@@ -38,9 +38,8 @@ C = xcorr(Tolkien_data, s_ref);
 L = length(Tolkien_data); 
 k = - (L-1) : (L-1); 
 figure(1) 
-plot(k,C) 
-title('Fonction de correlation croisee entre Tolkien_d_a_t_a et s_r_e_f') 
-xlabel('Decalage k') 
+crossCorrGraph(k,C)
+xlim([1750 2250]) 
 
 % Finds all the peaks , because the first local maxima is the location of
 % "s_ref"
@@ -98,4 +97,7 @@ for index = 1:nb_char_mess
 end
 
 % Answer
-message
+disp(message(1:41))
+disp(message(42:80))
+disp(message(81:122))
+disp(message(123:160))

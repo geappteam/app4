@@ -12,6 +12,10 @@ env = enveloppe( guitarAS, cutoff);
 decimated_env = decimate(env, decimating_factor);
 lines = dftEncode(guitarAS, guitarAS_Fs, numberOfLines);
 
+save lines.mat lines
+clearvars lines
+load('lines.mat', 'lines')
+
 % Decodage
 recSignal = recomposeSignal( lines, decimated_env, decimating_factor, guitarAS_Fs );
 recSignal = recSignal*25;

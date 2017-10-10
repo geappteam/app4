@@ -50,5 +50,6 @@ for line = 1:size(pkAmp, 1)
     spectralLines(line,2) = af(pkIndices(line));
     spectralLines(line,3) = angle(FT_hw_signal(pkIndices(line)));
 end
+    
 end
 

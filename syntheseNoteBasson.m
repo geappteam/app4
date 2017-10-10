@@ -24,7 +24,7 @@ ampSpec(2:end) = 2*ampSpec(2:end);
 ampSpec = ampSpec * db2mag(6);
 
 figure (13)
-plot(af(0:N/4-1), ampSpec(1:N/4));
+plot(af(0:N/4-1), mag2db(ampSpec(1:N/4)));
 hold on
 
 % Finding the fundamental frequency
@@ -44,6 +44,16 @@ for line = 1:size(pkAmp, 1)
     spectralLines(line,3) = angle(FT_hw_signal(pkIndices(line)));
 end
 
-stem (spectralLines(:,2), spectralLines(:,1))
+stem (spectralLines(:,2), mag2db(spectralLines(:,1)))
 hold off
 spectralLines
+
+% Encoding enveloppe
+env = enveloppe( CleanNoteBasson, pi/1000);
+decimated_env = decimate(env, 1000);
+
+% Decodage
+recSignal = recomposeSignal( spectralLines, decimated_env, 1000, Fs );
+recSignal = recSignal*6;
+
+sound (recSignal, Fs);

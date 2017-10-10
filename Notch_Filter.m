@@ -3,7 +3,7 @@ close all
 clear all %#ok<CLSCR>
 
 % Problematique
-[y,Fs] = audioread('C:\Users\Utilisateur\OneDrive - USherbrooke\S5\App4\Sons\note_basson_plus_sinus_1000_Hz.wav');
+[y,Fs] = audioread('res/note_basson_plus_sinus_1000_Hz.wav');
 
 % ***
 % Bandpass Filter : 2 pole 2 zeros 

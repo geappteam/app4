@@ -60,4 +60,19 @@ clf
 plot(t,y,t,y_Out)
 legend('Noisy signal','Filtered (IIR)')
 xlabel('Time (sec)')
-       
+
+%% Display IIR filter impulse response
+figure('Name','IIR impulse response')
+clf
+impz(b,a,44100)
+
+%% Reponse a un signal de 1khz
+figure('Name','IIR: Reponse sinus 1khz')
+clf
+td = 0:8000;
+tt = td / Fs;
+signal  = sin(2*pi*1000*tt);
+plot(tt, filter (b,a,signal));
+ylabel('Amplitude')
+xlabel('Temps (secondes)')
+title('IIR: reponse sin (1khz)')

@@ -29,5 +29,5 @@ ylabel('Value');
 title('Truncated Impulse Response');
 
 figure('Name','Freqz')
-freqz(d);                           % Frequency response of digital filter
+freqz(coeff);                           % Frequency response of digital filter
 title('Frequency response of digital filter')

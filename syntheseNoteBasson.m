@@ -6,7 +6,7 @@ clear all %#ok<CLSCR>
 [y, Fs] = audioread('res/note_basson_plus_sinus_1000_Hz.wav');
 
 % Load Function Bandpass Sinus 1000 Hz
-CleanNoteBasson = FctBandpassSinus1000Hz(y, Fs);
+CleanNoteBasson = FctNotchFilterSinus1000Hz(y, Fs);
 
 % Create a wave file
 filename = 'res/note_basson.wav';

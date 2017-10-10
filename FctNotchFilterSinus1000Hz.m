@@ -1,4 +1,4 @@
-function [ out ] = FctBandpassSinus1000Hz( y, Fs )
+function [ out ] = FctNotchFilterSinus1000Hz( y, Fs )
 
 % ***
 % Bandpass Filter : 2 pole 2 zeros 
@@ -8,8 +8,7 @@ function [ out ] = FctBandpassSinus1000Hz( y, Fs )
 % ***
 
     % Bandpass Filter (IIR)
-    r = 0.9969;
-    N = length(y);
+    r = 0.9985;
     fn_Low = 980;                                   % 980 Hz
     fn_High = 1020;                                 % 1020 Hz
     fn = ((fn_Low + fn_High)/2);                    % 1010 Hz

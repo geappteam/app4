@@ -11,7 +11,11 @@ N = size(guitarAS,1);
 env = enveloppe( guitarAS, cutoff);
 decimated_env = decimate(env, decimating_factor);
 cut_env = decimated_env(7:end);
+
 lines = dftEncode(guitarAS, guitarAS_Fs, numberOfLines);
+save lines.mat lines
+clearvars lines
+load('lines.mat', 'lines')
 
 % Decodage
 G_lines = fTranspose(lines, 392);

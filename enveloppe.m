@@ -3,13 +3,13 @@ function [ env ] = enveloppe( samples, fNcutoff)
     samples = abs(samples);
     
     fc = fNcutoff;                              % Cut-off standardized frequency 
-    N = 290;                                        % Estimated at 290 -> To be determined
+    N = 885;
     n = -((N-1)/2):((N-1)/2);       
-    n = n+(n==0)*eps;                               % Only to prevent devision by 0
-
-    [h] = sin(n*2*pi*fc)./(n*pi);                   % Generation of the sequence of ideal coefficients
+    n = n+(n==0)*eps;
+    
+    coeff = (1/N)*ones(1,N);
     [w] = 0.54 + 0.46*cos(2*pi*n/N);                % Generation of the Hamming Window
-    d = h .* w;                                     % Modified Filter
+    d = coeff .* w;                                    % Modified Filter
 
     env = filter(d,1, samples) * 2;          % Correcting according to lim x-> infinity, (sum sin(n/x * pi/2) , n=1 to x)/x
 end

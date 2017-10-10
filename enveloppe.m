@@ -11,6 +11,6 @@ function [ env ] = enveloppe( samples, fNcutoff)
     [w] = 0.54 + 0.46*cos(2*pi*n/N);                % Generation of the Hamming Window
     d = h .* w;                                     % Modified Filter
 
-    env = filter(d,1, samples);    
+    env = filter(d,1, samples) * 2;          % Correcting according to lim x-> infinity, (sum sin(n/x * pi/2) , n=1 to x)/x
 end
 

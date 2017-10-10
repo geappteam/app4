@@ -35,11 +35,11 @@ s_ref = bit_0;
 % Find the start of the message (N1). Must correlate with "s_ref".
 C = xcorr(Tolkien_data, s_ref); 
 
-L = length(Tolkien_data); 
-k = - (L-1) : (L-1); 
-figure(1) 
-crossCorrGraph(k,C)
-xlim([1750 2250]) 
+% L = length(Tolkien_data); 
+% k = - (L-1) : (L-1); 
+% figure(1) 
+% crossCorrGraph(k,C)
+% xlim([1750 2250]) 
 
 % Finds all the peaks , because the first local maxima is the location of
 % "s_ref"
